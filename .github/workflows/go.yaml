@@ -96,9 +96,9 @@ jobs:
           file: docker/Dockerfile
           tags: ${{ env.GHCR_REGISTRY_IMAGE }}:${{ github.sha }}
           push: true
+          platforms: ${{ env.IMAGE_PLATFORMS }}
           build-args: |
             COMMIT_HASH=${{ github.sha }}
-          platforms: ${{ env.IMAGE_PLATFORMS }}
 
   deploy-docker:
     runs-on: ubuntu-latest
