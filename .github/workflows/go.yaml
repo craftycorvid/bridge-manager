@@ -95,7 +95,6 @@ jobs:
           pull: true
           file: docker/Dockerfile
           tags: ${{ github.sha }}
-          push: true
           platforms: ${{ env.IMAGE_PLATFORMS }}
           build-args: |
             COMMIT_HASH=${{ github.sha }}
