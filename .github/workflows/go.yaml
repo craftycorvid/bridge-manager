@@ -6,7 +6,7 @@ env:
   GO_VERSION: "1.22"
   GHCR_REGISTRY: ghcr.io
   GHCR_REGISTRY_IMAGE: "ghcr.io/${{ github.repository }}"
-  IMAGE_PLATFORMS: linux/amd64,linux/arm64
+  IMAGE_PLATFORMS: linux/arm64
 
 jobs:
   lint:
