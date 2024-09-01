@@ -72,24 +72,18 @@ var askParams = map[string]func(string, map[string]string) (bool, error){
 		changed := false
 		if metaPlatform == "" {
 			if strings.Contains(bridgeName, "facebook-tor") || strings.Contains(bridgeName, "facebooktor") {
-				extraParams["meta_platform"] = "facebook-tor"
+				metaPlatform = "facebook-tor"
 			} else if strings.Contains(bridgeName, "facebook") {
-				extraParams["meta_platform"] = "facebook"
+				metaPlatform = "facebook"
 			} else if strings.Contains(bridgeName, "messenger") {
-				extraParams["meta_platform"] = "messenger"
+				metaPlatform = "messenger"
 			} else if strings.Contains(bridgeName, "instagram") {
-				extraParams["meta_platform"] = "instagram"
+				metaPlatform = "instagram"
 			} else {
-				err := survey.AskOne(&survey.Select{
-					Message: "Which Meta platform do you want to bridge?",
-					Options: []string{"instagram", "facebook", "facebook-tor", "messenger"},
-				}, &metaPlatform)
-				if err != nil {
-					return false, err
-				}
-				extraParams["meta_platform"] = metaPlatform
-				changed = true
+				extraParams["meta_platform"] = ""
+				return false, nil
 			}
+			extraParams["meta_platform"] = metaPlatform
 		} else if metaPlatform != "instagram" && metaPlatform != "facebook" && metaPlatform != "facebook-tor" && metaPlatform != "messenger" {
 			return false, UserError{"Invalid Meta platform specified"}
 		}
@@ -223,6 +217,7 @@ var bridgeIPSuffix = map[string]string{
 	"slack":      "35",
 	"gmessages":  "36",
 	"imessagego": "37",
+	"gvoice":     "38",
 }
 
 func doGenerateBridgeConfig(ctx *cli.Context, bridge string) (*generatedBridgeConfig, error) {
@@ -349,7 +344,7 @@ func generateBridgeConfig(ctx *cli.Context) error {
 	}
 	var startupCommand, installInstructions string
 	switch cfg.BridgeType {
-	case "imessage", "whatsapp", "discord", "slack", "gmessages", "signal", "meta":
+	case "imessage", "whatsapp", "discord", "slack", "gmessages", "gvoice", "signal", "meta":
 		startupCommand = fmt.Sprintf("mautrix-%s", cfg.BridgeType)
 		if outputPath != "config.yaml" && outputPath != "<config file>" {
 			startupCommand += " -c " + outputPath

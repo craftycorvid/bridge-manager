@@ -1,9 +1,27 @@
-# v0.11.0 (unreleased)
+# v0.12.2 (2024-08-26)
+
+* Added support for Google Voice bridge.
+* Fixed running Meta bridge without specifying platform.
+
+# v0.12.1 (2024-08-17)
+
+* Bumped minimum Go version to 1.22.
+* Removed separate v2 versions of Signal and Slack. The normal bridges default to v2 now.
+* Switched Google Messages and Meta to v2.
+
+# v0.12.0 (2024-07-12)
+
+* Added support for generating generic bridgev2/megabridge configs.
+* Added support for signalv2 and slackv2.
+* Updated hungryserv URL template to work with megahungry.
+
+# v0.11.0 (2024-04-17)
 
 * Fixed mautrix-imessage media viewer config.
 * Updated main branch name for mautrix-whatsapp.
 * Updated Meta config to allow choosing messenger and facebook-tor modes.
 * Dropped support for legacy Facebook and Instagram bridges.
+* Removed "Work in progress" warning from iMessage BlueBubbles connector.
 
 # v0.10.1 (2024-02-28)
 

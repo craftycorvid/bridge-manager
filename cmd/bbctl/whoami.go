@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"regexp"
 	"sort"
 	"strings"
@@ -76,7 +77,7 @@ func coloredBridgeState(state status.BridgeStateEvent) string {
 	}
 }
 
-var bridgeImageRegex = regexp.MustCompile(`^docker\.beeper-tools\.com/(?:bridge/)?([a-z]+):([0-9a-f]{40})(?:-amd64)?$`)
+var bridgeImageRegex = regexp.MustCompile(`^docker\.beeper-tools\.com/(?:bridge/)?([a-z]+):(v2-)?([0-9a-f]{40})(?:-amd64)?$`)
 
 var dockerToGitRepo = map[string]string{
 	"hungryserv":  "https://github.com/beeper/hungryserv/commit/%s",
@@ -85,10 +86,12 @@ var dockerToGitRepo = map[string]string{
 	"facebook":    "https://github.com/mautrix/facebook/commit/%s",
 	"googlechat":  "https://github.com/mautrix/googlechat/commit/%s",
 	"instagram":   "https://github.com/mautrix/instagram/commit/%s",
+	"meta":        "https://github.com/mautrix/meta/commit/%s",
 	"linkedin":    "https://github.com/beeper/linkedin/commit/%s",
 	"signal":      "https://github.com/mautrix/signal/commit/%s",
 	"slackgo":     "https://github.com/mautrix/slack/commit/%s",
 	"telegram":    "https://github.com/mautrix/telegram/commit/%s",
+	"telegramgo":  "https://github.com/mautrix/telegramgo/commit/%s",
 	"twitter":     "https://github.com/mautrix/twitter/commit/%s",
 	"whatsapp":    "https://github.com/mautrix/whatsapp/commit/%s",
 }
@@ -105,9 +108,9 @@ func parseBridgeImage(bridge, image string, internal bool) string {
 		return color.YellowString(image)
 	}
 	if match[1] == "hungryserv" && !internal {
-		return match[2][:8]
+		return match[3][:8]
 	}
-	return color.HiBlueString(hyper.Link(match[2][:8], fmt.Sprintf(dockerToGitRepo[match[1]], match[2]), false))
+	return color.HiBlueString(match[2] + hyper.Link(match[3][:8], fmt.Sprintf(dockerToGitRepo[match[1]], match[3]), false))
 }
 
 func formatBridgeRemotes(name string, bridge beeperapi.WhoamiBridge) string {
@@ -169,8 +172,13 @@ func getCachedWhoami(ctx *cli.Context) (*beeperapi.RespWhoami, error) {
 		ec.ClusterID = resp.UserInfo.BridgeClusterID
 		changed = true
 	}
-	if ec.HungryAddress != resp.UserInfo.HungryURL {
-		ec.HungryAddress = resp.UserInfo.HungryURL
+	publicHungryURL := url.URL{
+		Scheme: "https",
+		Host:   "matrix." + ctx.String("homeserver"),
+		Path:   "/_hungryserv/" + resp.UserInfo.Username,
+	}
+	if ec.HungryAddress != publicHungryURL.String() {
+		ec.HungryAddress = publicHungryURL.String()
 		changed = true
 	}
 	if changed {

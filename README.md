@@ -26,7 +26,7 @@ than on Beeper servers).
 1. Download the latest binary from [GitHub releases](https://github.com/beeper/bridge-manager/releases)
    or [actions](https://nightly.link/beeper/bridge-manager/workflows/go.yaml/main).
    * Alternatively, you can build it yourself by cloning the repo and running
-     `./build.sh`. Building requires Go 1.21 or higher.
+     `./build.sh`. Building requires Go 1.22 or higher.
    * bbctl supports amd64 and arm64 on Linux and macOS.
      Windows is not supported natively, please use WSL.
 2. Log into your Beeper account with `bbctl login`.
@@ -86,11 +86,12 @@ used with the `--type` flag.
 | [mautrix-discord]    | discord                              |
 | [mautrix-slack]      | slack                                |
 | [mautrix-gmessages]  | gmessages,  googlemessages, rcs, sms |
+| [mautrix-gvoice]     | gvoice, googlevoice                  |
 | [mautrix-meta]       | meta, instagram, facebook            |
 | [mautrix-googlechat] | googlechat, gchat                    |
 | [mautrix-twitter]    | twitter                              |
 | [mautrix-imessage]   | imessage                             |
-| [beeper-imessage]   | imessagego                           |
+| [beeper-imessage]    | imessagego                           |
 | [linkedin-matrix]    | linkedin                             |
 | [heisenbridge]       | heisenbridge, irc                    |
 
@@ -100,6 +101,7 @@ used with the `--type` flag.
 [mautrix-discord]: https://github.com/mautrix/discord
 [mautrix-slack]: https://github.com/mautrix/slack
 [mautrix-gmessages]: https://github.com/mautrix/gmessages
+[mautrix-gvoice]: https://github.com/mautrix/gvoice
 [mautrix-meta]: https://github.com/mautrix/meta
 [mautrix-facebook]: https://github.com/mautrix/facebook
 [mautrix-instagram]: https://github.com/mautrix/instagram
@@ -115,25 +117,17 @@ used with the `--type` flag.
    * `<name>` is a short name for the bridge (a-z, 0-9, -). The name should
      start with `sh-`. The bridge user ID namespace will be `@<name>_.+:beeper.local`
      and the bridge bot will be `@<name>bot:beeper.local`.
-   * Optionally you can pass `-a <address>` to have the Beeper server push
-     events directly to the bridge. However, this requires that the bridge is
-     publicly accessible. The proxy option below is easier.
 4. Now you can configure and run the bridge by following the bridge's own
    documentation.
-5. If you didn't pass an address to `register`, modify the registration file to
-   point at where the bridge will listen locally (e.g. `url: http://localhost:8080`),
-   then run `bbctl proxy -r registration.yaml` to start the proxy.
+5. Modify the registration file to point at where the bridge will listen locally
+   (e.g. `url: http://localhost:8080`), then run `bbctl proxy -r registration.yaml`
+   to start the proxy.
    * The proxy will connect to the Beeper server using a websocket and push
      received events to the bridge via HTTP. Since the HTTP requests are all on
      localhost, you don't need port forwarding or TLS certificates.
 
 Note that the homeserver URL may change if you're moved to a different cluster.
 In general, that shouldn't happen, but it's not impossible.
-
-If you want to get the registration again later, you can add the `--get` flag.
-Just re-running `register` is allowed too, but you need to provide the address
-again if you do that (which also means if you want to change the address, just
-re-run register with the new address).
 
 You can use `--json` with `register` to get the whole response as JSON instead
 of registration YAML and pretty-printed extra details. This may be useful if

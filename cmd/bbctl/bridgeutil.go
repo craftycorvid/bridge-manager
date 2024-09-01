@@ -34,6 +34,7 @@ var officialBridges = []bridgeTypeToNames{
 	{"whatsapp", []string{"whatsapp"}},
 	{"heisenbridge", []string{"irc", "heisenbridge"}},
 	{"gmessages", []string{"gmessages", "googlemessages", "rcs", "sms"}},
+	{"gvoice", []string{"gvoice", "googlevoice"}},
 }
 
 var websocketBridges = map[string]bool{
@@ -41,10 +42,12 @@ var websocketBridges = map[string]bool{
 	"slack":        true,
 	"whatsapp":     true,
 	"gmessages":    true,
+	"gvoice":       true,
 	"heisenbridge": true,
 	"imessage":     true,
 	"imessagego":   true,
 	"signal":       true,
+	"bridgev2":     true,
 	"meta":         true,
 }
 
